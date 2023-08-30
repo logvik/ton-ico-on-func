@@ -25,7 +25,7 @@ Fill out the values in `.env`:
 
 ```
 JETTON_ADMIN="" # adress from which will be managed this ICO
-JETTON_CONTENT_URI="" # URI for metadata by standard for example - https://api.gangswars.com/assets/gsws.json
+JETTON_CONTENT_URI="" # URI for metadata by standard https://github.com/ton-blockchain/TEPs/blob/master/text/0064-token-data-standard.md
 JETTON_STATE=0 # 0 - active, 1 - paused
 JETTON_PRICE=2 #1 TON = 2 jetton
 JETTON_CAP=77777000000000 # 77777 jetton maximum
