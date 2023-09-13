@@ -291,7 +291,7 @@ export async function run(provider: NetworkProvider) {
         const isContractDeployed = await provider.isContractDeployed(ICOAddress);
         if (!isContractDeployed) {
             retry = true;
-            ui.write("This contract is not active!\nPlease use another address, or deploy it firs");
+            ui.write("This contract is not active!\nPlease use another address, or deploy it first");
         }
         else {
             const lastSeqno = (await api.getLastBlock()).last.seqno;

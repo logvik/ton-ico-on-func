@@ -123,10 +123,29 @@ describe('JettonMinterICO', () => {
         expect(tonBalanceInitial).toEqual(tonBalance);
     });
     // implementation detail
+    it('check the jetton amount estimation based on TON amount', async () => {
+        let jettonAmount = await jettonMinter.getJettonAmount(toNano('1'));
+        expect(jettonAmount).toEqual((toNano('1')-min_tons_for_storage)*price/toNano('1'));
+        jettonAmount = await jettonMinter.getJettonAmount(toNano('2'));
+        expect(jettonAmount).toEqual((toNano('2')-min_tons_for_storage)*price/toNano('1'));
+        jettonAmount = await jettonMinter.getJettonAmount(toNano('0.1'));
+        expect(jettonAmount).toEqual((toNano('0.1')-min_tons_for_storage)*price/toNano('1'));
+        jettonAmount = await jettonMinter.getJettonAmount(toNano('0.19999999'));
+        expect(jettonAmount).toEqual((toNano('0.19999999')-min_tons_for_storage)*price/toNano('1'));
+    });
+    // implementation detail
     it('anyone can buy during ICO', async () => {
         await jettonMinter.sendBuy(notDeployer.getSender(), toNano('1'));
         const nonDeployerJettonWallet = await userWallet(notDeployer.address);
-        expect(await nonDeployerJettonWallet.getJettonBalance()).toEqual(price*(toNano('1')-min_tons_for_storage));
+        expect(await nonDeployerJettonWallet.getJettonBalance()).toEqual((toNano('1')-min_tons_for_storage)*price/toNano('1'));
+    });
+    // implementation detail
+    it('anyone can buy during ICO from 0.1 TON', async () => {
+        let buyOn = toNano('0.1');
+        await jettonMinter.sendBuy(notDeployer.getSender(), buyOn);
+        const nonDeployerJettonWallet = await userWallet(notDeployer.address);
+        const previousJettonBalance = (toNano('1')-min_tons_for_storage)*price/toNano('1');
+        expect(await nonDeployerJettonWallet.getJettonBalance()).toEqual(previousJettonBalance + (buyOn-min_tons_for_storage)*price/toNano('1'));
     });
     // implementation detail
     it('impossible to buy less than min amount', async () => {
@@ -140,7 +159,7 @@ describe('JettonMinterICO', () => {
     });
     // implementation detail
     it('impossible to buy more than cap', async () => {
-        let buy = await jettonMinter.sendBuy(notDeployer.getSender(), ((cap*BigInt(100)/price)/BigInt(100)));
+        let buy = await jettonMinter.sendBuy(notDeployer.getSender(), toNano(cap/price));
         expect(buy.transactions).toHaveTransaction({
             from: notDeployer.address,
             to: jettonMinter.address,

@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Blockchain, SandboxContract, TreasuryContract, Verbosity, internal } from '@ton/sandbox';
 import { Cell, toNano, beginCell, Address, SendMode } from '@ton/core';
 import { JettonWallet } from '../wrappers/JettonWallet';

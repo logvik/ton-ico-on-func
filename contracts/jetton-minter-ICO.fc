@@ -44,6 +44,13 @@ const int provide_address_gas_consumption = 10000000;
   );
 }
 
+int division(int a, int b) asm "x{A904} s,";   ;; 65 gas units
+int multiply(int a, int b) asm "x{A8} s,";     ;; 65 gas units
+
+int multiply_f(int a, int b) { ;; multiply with factor
+    return division(multiply(a, b), 1000000000 {- 1e9 -});
+}
+
 () mint_tokens(slice to_address, cell jetton_wallet_code, int amount, cell master_msg) impure {
   cell state_init = calculate_jetton_wallet_state_init(to_address, my_address(), jetton_wallet_code);
   slice to_wallet_address = calc_address(state_init);
@@ -88,7 +95,7 @@ const int provide_address_gas_consumption = 10000000;
     int buy_amount = msg_value - min_tons_for_storage;
     throw_unless(error::min_amount, buy_amount > 0);
 
-    int jetton_amount = buy_amount * price; ;; rate 1 jetton = 1 toncoin * price;
+    int jetton_amount = multiply_f(buy_amount, price); ;; rate 1 jetton = 1 toncoin * price {- 1e9 -};
 
     throw_unless(error::cap_exceeded, total_supply + jetton_amount < cap);
 
@@ -226,6 +233,15 @@ const int provide_address_gas_consumption = 10000000;
 (int, int, int, int, int) get_ico_data() method_id {
   (int total_supply, int state, int price, int cap, int start_date, int end_date, slice admin_address, cell content, cell jetton_wallet_code) = load_data();
   return (state, price, cap, start_date, end_date);
+}
+
+int get_jetton_amount(int ton_amount) method_id {
+  (int total_supply, int state, int price, int cap, int start_date, int end_date, slice admin_address, cell content, cell jetton_wallet_code) = load_data();
+  int buy_amount = ton_amount - min_tons_for_storage;
+  throw_unless(error::min_amount, buy_amount > 0);
+
+  int jetton_amount = multiply_f(buy_amount, price); ;; rate 1 jetton = 1 toncoin * price {- 1e9 -};
+  return jetton_amount;
 }
 
 (int, int, slice, cell, cell) get_jetton_data() method_id {

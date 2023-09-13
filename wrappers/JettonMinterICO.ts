@@ -224,4 +224,9 @@ export class JettonMinterICO implements Contract {
         let res = await this.getICOData(provider);
         return res.end_date;
     }
+
+    async getJettonAmount(provider: ContractProvider, value: bigint) {
+        let res = await provider.get('get_jetton_amount', [{type: "int", value}]);
+        return res.stack.readBigNumber();
+    }
 }
