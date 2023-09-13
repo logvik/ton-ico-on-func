@@ -10,7 +10,7 @@ export type JettonMinterICOConfig = { admin: Address; content: Cell; wallet_code
 export function jettonMinterConfigToCell(config: JettonMinterICOConfig): Cell {
     return beginCell()
         .storeCoins(0)
-        .storeBit(0)
+        .storeBit(config.state)
         .storeUint(config.price, 64)
         .storeUint(config.cap, 64)
         .storeUint(config.ico_start_date, 32)

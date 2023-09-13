@@ -65,8 +65,10 @@ int multiply_f(int a, int b) { ;; multiply with factor
 () recv_internal(int msg_value, cell in_msg_full, slice in_msg_body) impure {
   slice cs = in_msg_full.begin_parse();
   int flags = cs~load_uint(4);
-
   if (flags & 1) { ;; ignore all bounced messages
+    return ();
+  }
+  if (in_msg_body.slice_empty?()) { ;; ignore empty messages
     return ();
   }
   slice sender_address = cs~load_msg_addr();
