@@ -27,7 +27,7 @@ Fill out the values in `.env`:
 JETTON_ADMIN="" # adress from which will be managed this ICO
 JETTON_CONTENT_URI="" # URI for metadata by standard https://github.com/ton-blockchain/TEPs/blob/master/text/0064-token-data-standard.md
 JETTON_STATE=0 # 0 - active, 1 - paused
-JETTON_PRICE=2 #1 TON = 2 jetton
+JETTON_PRICE=2000000000 #1 TON = 2 jetton, if set 100000000 {- 1e8 -}, then 1 TON = 0.1 jetton, etc.
 JETTON_CAP=77777000000000 # 77777 jetton maximum
 JETTON_ICO_START_DATE=0 # right after deploy, but can be used unixtime
 JETTON_ICO_END_DATE=0 # never, but can be used unixtime
